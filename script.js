@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
       "User: unknown",
       "IP: Loading...",
       "System: Loading...", // System information placeholder
-      "Bio Loaded",
+      "Alt F4 pressed",
+      "Pushing stupid rock up hill..."
       "Press Enter To Continue",
   ];
   var currentIndex = 0;
