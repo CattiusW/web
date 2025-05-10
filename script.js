@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "IP: Loading...",
       "System: Loading...", // System information placeholder
       "Alt F4 pressed",
-      "Pushing stupid rock up hill..."
+      "Pushing rock up hill...",
       "Press Enter To Continue",
   ];
   var currentIndex = 0;
