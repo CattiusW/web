@@ -2,11 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Get references to DOM elements
   var terminalContainer = document.getElementById('terminal');
   var terminalText = document.getElementById('terminal-text');
-  var videoBackground = document.getElementById('myVideo');
-  var audioBackground = document.getElementById('myAudio');
   var blurredBox = document.getElementById('blurred-box');
   var closeButton = document.getElementById('close-button');
-
+  console.log('Credit to 3kh0 http://github.com/3kh0 for the background code')
   // Initial terminal text content
   var terminalTextContent = [
       "User: unknown",
@@ -21,9 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
   var currentIndex = 0;
 
-  // Pause background video and audio
-  videoBackground.pause();
-  audioBackground.pause();
 
   // Function to type out terminal text
   function typeWriter() {
@@ -53,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleInput() {
       // Hide terminal, play background video and audio, and show blurred box
       terminalContainer.style.display = 'none';
-      videoBackground.play();
-      audioBackground.play();
+      
       blurredBox.style.display = 'block';
       removeEventListeners(); // Remove event listeners after handling input
   }
