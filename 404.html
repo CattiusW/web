@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404</title>
+<link rel="stylesheet" type="text/css" href="styles.css"> 
+
+<link rel="icon" type="image/x-icon" href="default.jpg">
+</head>
+  <style>
+  /* Media query for mobile devices */
+  @media only screen and (max-width: 768px) {
+    /* Reduce font size for smaller screens */
+    #username {
+      font-size: medium; /* Adjust the font size to be smaller */
+    }
+    #user-description {
+      font-size: small; /* Adjust the font size to be smaller */
+    }
+
+    /* Make the blurred box bigger */
+    #blurred-box {
+      width: 75%; /* Adjust width as per requirement */
+      height: 50%; /* Adjust height as per requirement */
+      padding: 20px; /* Add padding if needed */
+    }
+
+    /* Optional: Adjust profile picture size if needed */
+    #profile-picture {
+      width: 100px; /* Adjust width */
+      height: 100px; /* Adjust height */
+    }
+  }
+</style>
+<body class="custom-cursor">
+  <!-- Terminal Window -->
+  <div id="terminal" class="custom-cursor">
+    <div id="terminal-header">
+      <div id="terminal-buttons">
+        <!-- Terminal Control Buttons -->
+        <div class="terminal-button" id="close-button"></div> <!-- Close button -->
+        <div class="terminal-button" id="minimize-button"></div> <!-- Minimize button -->
+        <div class="terminal-button" id="maximize-button"></div> <!-- Maximize button -->
+      </div>
+    </div>
+    <div id="terminal-content">
+      <p id="terminal-text"></p> <!-- Terminal text content -->
+    </div>
+  </div>
+  <!-- Background Elements -->
+  <div id="video-background">
+    <video autoplay muted loop id="myVideo"> <!-- Video background -->
+      <source src="default.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div id="audio-background">
+      <audio autoplay loop id="myAudio"> <!-- Audio background -->
+        <source src="default.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    <div id="blurred-box">
+      <img id="profile-picture" src="default.jpeg" alt="Profile Picture">
+      <img id="avatar-frame" src="" alt="Avatar Frame">
+      <p id="username" style="color: white; font-weight: bold; font-size: large;">404ik`i;</p> <!-- Username -->
+      <!-- User Description -->
+      <div class="user-description">
+        
+        <p id="user-description" style="color: white;">Send me an <a href="mailto:cassius@mangopi.xyz" style="color:white;text-decoration:none;"><strong>email</strong></a> with this info:<br></p>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+      <script>eruda.init();</script>
+      <!-- Links -->
+      <div class="links">
+    
+      </div>
+    </div>
+  </div>
+  <script src="404.js"></script> <!-- Script for functionality -->
+
+</body>
+</html>
