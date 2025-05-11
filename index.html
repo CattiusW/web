@@ -9,9 +9,18 @@
 <link rel="icon" type="image/x-icon" href="default.jpg">
 </head>
   <style>
+    #background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+}
   /* Media query for mobile devices */
   @media only screen and (max-width: 768px) {
     /* Reduce font size for smaller screens */
+
     #username {
       font-size: medium; /* Adjust the font size to be smaller */
     }
@@ -49,17 +58,9 @@
     </div>
   </div>
   <!-- Background Elements -->
-  <div id="video-background">
-    <video autoplay muted loop id="myVideo"> <!-- Video background -->
-      <source src="default.mp4" type="video/mp4">
-      Your browser does not support HTML5 video.
-    </video>
-    <div id="audio-background">
-      <audio autoplay loop id="myAudio"> <!-- Audio background -->
-        <source src="default.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+  <div id="background">
+  </div>
+  <div>
     <div id="blurred-box">
       <img id="profile-picture" src="default.jpeg" alt="Profile Picture">
       <img id="avatar-frame" src="" alt="Avatar Frame">
@@ -77,6 +78,169 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+   <script>
+    (function() {
+      let scene, camera, renderer, container, materials = [], particles;
+      let HEIGHT, WIDTH, fieldOfView, aspectRatio, nearPlane, farPlane, cameraZ;
+      let windowHalfX, windowHalfY, mouseX = 0, mouseY = 0, fogHex, fogDensity, parameters = [], parameterCount;
+
+      // Initialize the background animation
+      function initBackground() {
+        HEIGHT = window.innerHeight;
+        WIDTH = window.innerWidth;
+        windowHalfX = WIDTH / 2;
+        windowHalfY = HEIGHT / 2;
+
+        fieldOfView = 75; //if you change this, it gets weird
+        aspectRatio = WIDTH / HEIGHT;
+        nearPlane = 1;
+        farPlane = 3000;
+
+        cameraZ = farPlane / 3; // 1k
+        fogHex = 0x000000; // black!!!
+        fogDensity = 0.0007;
+
+        camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
+        camera.position.z = cameraZ;
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(fogHex, fogDensity);
+
+        container = document.getElementById("background");
+        if (!container) {
+          container = document.createElement("div");
+          container.id = "background";
+          document.body.appendChild(container);
+        }
+
+        const positions = [];
+        let count = 2000 // add more for lag
+
+        // Create random positions
+        for (let i = 0; i < count; i++) {
+          const x = Math.random() * 2000 - 1000;
+          const y = Math.random() * 2000 - 1000;
+          const z = Math.random() * 2000 - 1000;
+
+          positions.push(x, y, z);
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+
+        parameters = [
+          [[1, 1, 0.5], 5],
+          [[0.95, 1, 0.5], 4],
+          [[0.9, 1, 0.5], 3],
+          [[0.85, 1, 0.5], 2],
+          [[0.8, 1, 0.5], 1],
+        ];
+        parameterCount = parameters.length;
+
+        // Create materials and particles
+        for (let i = 0; i < parameterCount; i++) {
+          const color = parameters[i][0];
+          const size = parameters[i][1];
+
+          materials[i] = new THREE.PointsMaterial({ size: size });
+          particles = new THREE.Points(geometry, materials[i]);
+
+          particles.rotation.x = Math.random() * 6;
+          particles.rotation.y = Math.random() * 6;
+          particles.rotation.z = Math.random() * 6;
+
+          scene.add(particles);
+        }
+
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(WIDTH, HEIGHT); //should fullscreen everything
+
+        container.appendChild(renderer.domElement); //go time
+
+        // events
+        window.addEventListener("resize", onWindowResize, false);
+        document.addEventListener("mousemove", onDocumentMouseMove, false);
+        document.addEventListener("touchstart", onDocumentTouchStart, false);
+        document.addEventListener("touchmove", onDocumentTouchMove, false);
+      }
+
+      // Animation loop
+      function animate() {
+        
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      // Render the scene
+      function render() {
+        const time = Date.now() * 0.00005;
+
+        camera.position.x += (mouseX - camera.position.x) * 0.005;
+        camera.position.y += (-mouseY - camera.position.y) * 0.005;
+
+        camera.lookAt(scene.position);
+
+        // Rotate particles
+        for (let i = 0; i < scene.children.length; i++) {
+          const object = scene.children[i];
+          if (object instanceof THREE.Points) {
+            object.rotation.y = time * (i < 4 ? i + 1 : -(i + 1)); // Adjust rotation
+          }
+        }
+        
+        // Adjust color hue (commented out by default)
+        for (let i = 0; i < materials.length; i++) {
+          const color = parameters[i][0];
+// Alternate between orange and yellow
+let h = (i % 2 === 0) ? 30 / 360 : 60 / 360; // Orange (30°) and Yellow (60°)
+materials[i].color.setHSL(h, color[0], color[2]);
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      // Update mouse position on move
+      function onDocumentMouseMove(e) {
+        mouseX = e.clientX - windowHalfX;
+        mouseY = e.clientY - windowHalfY;
+      }
+
+      // Update touch position on start
+      function onDocumentTouchStart(e) {
+        if (e.touches.length === 1) { // One finger touch
+          e.preventDefault();
+          mouseX = e.touches[0].pageX - windowHalfX;
+          mouseY = e.touches[0].pageY - windowHalfY;
+        }
+      }
+
+      // Update touch position on move
+      function onDocumentTouchMove(e) {
+        if (e.touches.length === 1) { // One finger touch
+          e.preventDefault();
+          mouseX = e.touches[0].pageX - windowHalfX;
+          mouseY = e.touches[0].pageY - windowHalfY;
+        }
+      }
+
+      // Handle window resize
+      function onWindowResize() {
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      // Initialize and animate
+      initBackground();
+      animate();
+    })();
+  </script>
+  <script> // Run every 1000 milliseconds (1 second)</script>
   <script src="script.js"></script> <!-- Script for functionality -->
   <script src="title.js"></script> <!-- Script for title functionality -->
 </body>
