@@ -1,68 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Background</title>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<link rel="stylesheet" type="text/css" href="styles.css"> 
+<script src="https://kit.fontawesome.com/2a6db92ff6.js" crossorigin="anonymous"></script>
+<link rel="icon" type="image/x-icon" href="default.jpg">
 </head>
-<body>
-  <div id="background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
-  <script>
-    function initBackground() {
-      const WIDTH = window.innerWidth;
-      const HEIGHT = window.innerHeight;
+  <style>
+    #background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+}
+  /* Media query for mobile devices */
+  @media only screen and (max-width: 768px) {
+    /* Reduce font size for smaller screens */
 
-      // Scene and Camera
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 3000);
-      camera.position.z = 1000;
-
-      // Renderer
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
-      renderer.setSize(WIDTH, HEIGHT);
-      document.getElementById('background').appendChild(renderer.domElement);
-
-      // Particles
-      const particles = new THREE.BufferGeometry();
-      const particleCount = 1000;
-      const positions = new Float32Array(particleCount * 3);
-
-      for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 2000; // X
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 2000; // Y
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 2000; // Z
-      }
-
-      particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-      const material = new THREE.PointsMaterial({ size: 5, color: 0xffffff });
-      const particleSystem = new THREE.Points(particles, material);
-      scene.add(particleSystem);
-
-      // Animation
-      function animate() {
-        particleSystem.rotation.x += 0.001;
-        particleSystem.rotation.y += 0.001;
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
-      }
-
-      animate();
-
-      // Adjust on Window Resize
-      window.addEventListener('resize', () => {
-        const WIDTH = window.innerWidth;
-        const HEIGHT = window.innerHeight;
-
-        camera.aspect = WIDTH / HEIGHT;
-        camera.updateProjectionMatrix();
-        renderer.setSize(WIDTH, HEIGHT);
-      });
+    #username {
+      font-size: medium; /* Adjust the font size to be smaller */
+    }
+    #user-description {
+      font-size: small; /* Adjust the font size to be smaller */
     }
 
-    // Initialize the Background
-    initBackground();
+    /* Make the blurred box bigger */
+    #blurred-box {
+      width: 75%; /* Adjust width as per requirement */
+      height: 50%; /* Adjust height as per requirement */
+      padding: 20px; /* Add padding if needed */
+    }
+
+    /* Optional: Adjust profile picture size if needed */
+    #profile-picture {
+      width: 100px; /* Adjust width */
+      height: 100px; /* Adjust height */
+    }
+  }
+</style>
+<body class="custom-cursor">
+  <!-- Terminal Window -->
+  <div id="terminal" class="custom-cursor">
+    <div id="terminal-header">
+      <div id="terminal-buttons">
+        <!-- Terminal Control Buttons -->
+        <div class="terminal-button" id="close-button"></div> <!-- Close button -->
+        <div class="terminal-button" id="minimize-button"></div> <!-- Minimize button -->
+        <div class="terminal-button" id="maximize-button"></div> <!-- Maximize button -->
+      </div>
+    </div>
+    <div id="terminal-content">
+      <p id="terminal-text"></p> <!-- Terminal text content -->
+    </div>
+  </div>
+  <!-- Background Elements -->
+  <div id="background">
+  </div>
+  <div>
+    <div id="blurred-box">
+      <img id="profile-picture" src="default.jpeg" alt="Profile Picture">
+      <img id="avatar-frame" src="" alt="Avatar Frame">
+      <p id="username" style="color: white; font-weight: bold; font-size: large;">CattiusW</p> <!-- Username -->
+      <!-- User Description -->
+      <div class="user-description">
+        
+        <p id="user-description" style="color: white;">Hi there! I’m Cassius, and I try to learn a new thing each day. I am interested in AI, Node.JS, web technologies & full-stack applications. I have 2 cats; Mango & Perdy. You can reach me <a href="https://mailhide.io/e/PYSevtvr" style="color:white;text-decoration:none;"><strong>here.</strong></a></p>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+      <script>eruda.init();</script>
+      <!-- Links -->
+      <div class="links">
+    
+      </div>
+    </div>
+  </div>
+   <script>
+    (function() {
+      let scene, camera, renderer, container, materials = [], particles;
+      let HEIGHT, WIDTH, fieldOfView, aspectRatio, nearPlane, farPlane, cameraZ;
+      let windowHalfX, windowHalfY, mouseX = 0, mouseY = 0, fogHex, fogDensity, parameters = [], parameterCount;
+
+      // Initialize the background animation
+      function initBackground() {
+        HEIGHT = window.innerHeight;
+        WIDTH = window.innerWidth;
+        windowHalfX = WIDTH / 2;
+        windowHalfY = HEIGHT / 2;
+
+        fieldOfView = 75; //if you change this, it gets weird
+        aspectRatio = WIDTH / HEIGHT;
+        nearPlane = 1;
+        farPlane = 3000;
+
+        cameraZ = farPlane / 3; // 1k
+        fogHex = 0x000000; // black!!!
+        fogDensity = 0.0007;
+
+        camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
+        camera.position.z = cameraZ;
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(fogHex, fogDensity);
+
+        container = document.getElementById("background");
+        if (!container) {
+          container = document.createElement("div");
+          container.id = "background";
+          document.body.appendChild(container);
+        }
+
+        const positions = [];
+        const count = 1000; // add more for lag
+
+        // Create random positions
+        for (let i = 0; i < count; i++) {
+          const x = Math.random() * 2000 - 1000;
+          const y = Math.random() * 2000 - 1000;
+          const z = Math.random() * 2000 - 1000;
+
+          positions.push(x, y, z);
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+
+        parameters = [
+          [[1, 1, 0.5], 5],
+          [[0.95, 1, 0.5], 4],
+          [[0.9, 1, 0.5], 3],
+          [[0.85, 1, 0.5], 2],
+          [[0.8, 1, 0.5], 1],
+        ];
+        parameterCount = parameters.length;
+
+        // Create materials and particles
+        for (let i = 0; i < parameterCount; i++) {
+          const color = parameters[i][0];
+          const size = parameters[i][1];
+
+          materials[i] = new THREE.PointsMaterial({ size: size });
+          particles = new THREE.Points(geometry, materials[i]);
+
+          particles.rotation.x = Math.random() * 6;
+          particles.rotation.y = Math.random() * 6;
+          particles.rotation.z = Math.random() * 6;
+
+          scene.add(particles);
+        }
+
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(WIDTH, HEIGHT); //should fullscreen everything
+
+        container.appendChild(renderer.domElement); //go time
+
+        // events
+        window.addEventListener("resize", onWindowResize, false);
+        document.addEventListener("mousemove", onDocumentMouseMove, false);
+        document.addEventListener("touchstart", onDocumentTouchStart, false);
+        document.addEventListener("touchmove", onDocumentTouchMove, false);
+      }
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      // Render the scene
+      function render() {
+        const time = Date.now() * 0.00005;
+
+        camera.position.x += (mouseX - camera.position.x) * 0.005;
+        camera.position.y += (-mouseY - camera.position.y) * 0.005;
+
+        camera.lookAt(scene.position);
+
+        // Rotate particles
+        for (let i = 0; i < scene.children.length; i++) {
+          const object = scene.children[i];
+          if (object instanceof THREE.Points) {
+            object.rotation.y = time * (i < 4 ? i + 1 : -(i + 1)); // Adjust rotation
+          }
+        }
+
+        // Adjust color hue (commented out by default)
+        for (let i = 0; i < materials.length; i++) {
+          const color = parameters[i][0];
+          // eslint-disable-next-line no-unused-vars
+            let h = ((360 * (color[0] + time)) % 360) / 360;
+       		materials[i].color.setHSL(h, color[0], color[2]);
+          //this sets a hue shift, looks kinda funny tho, but maybe for june
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      // Update mouse position on move
+      function onDocumentMouseMove(e) {
+        mouseX = e.clientX - windowHalfX;
+        mouseY = e.clientY - windowHalfY;
+      }
+
+      // Update touch position on start
+      function onDocumentTouchStart(e) {
+        if (e.touches.length === 1) { // One finger touch
+          e.preventDefault();
+          mouseX = e.touches[0].pageX - windowHalfX;
+          mouseY = e.touches[0].pageY - windowHalfY;
+        }
+      }
+
+      // Update touch position on move
+      function onDocumentTouchMove(e) {
+        if (e.touches.length === 1) { // One finger touch
+          e.preventDefault();
+          mouseX = e.touches[0].pageX - windowHalfX;
+          mouseY = e.touches[0].pageY - windowHalfY;
+        }
+      }
+
+      // Handle window resize
+      function onWindowResize() {
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      // Initialize and animate
+      initBackground();
+      animate();
+    })();
   </script>
+  <script src="script.js"></script> <!-- Script for functionality -->
+  <script src="title.js"></script> <!-- Script for title functionality -->
 </body>
 </html>
