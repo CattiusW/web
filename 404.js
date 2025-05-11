@@ -2,28 +2,23 @@ document.addEventListener('DOMContentLoaded', function() {
   // Get references to DOM elements
   var terminalContainer = document.getElementById('terminal');
   var terminalText = document.getElementById('terminal-text');
-  var videoBackground = document.getElementById('myVideo');
-  var audioBackground = document.getElementById('myAudio');
   var blurredBox = document.getElementById('blurred-box');
   var closeButton = document.getElementById('close-button');
-
+  console.log('Credit to 3kh0 http://github.com/3kh0 for the background code')
   // Initial terminal text content
   var terminalTextContent = [
-      "404",
-      "This page could not be found",
-      "Try checking the British Museum", // System information placeholder
-      "If it hasn't been taken there then:",
-      "Try donating to Amnesty International,",
-      "Clearing your browser Cache,",
-      "And if all else fails,",
+      "User: unknown",
+      "IP: Loading...",
+      "System: Loading...", // System information placeholder
+      "Alt F4 pressed",
+      "Pushing a stupid rock up a hill...",
+      "Taking a mindfulness minute",
+      "Testing your patience...",
       "Press Enter To Continue",
       
   ];
   var currentIndex = 0;
 
-  // Pause background video and audio
-  videoBackground.pause();
-  audioBackground.pause();
 
   // Function to type out terminal text
   function typeWriter() {
@@ -53,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleInput() {
       // Hide terminal, play background video and audio, and show blurred box
       terminalContainer.style.display = 'none';
-      videoBackground.play();
-      audioBackground.play();
+      
       blurredBox.style.display = 'block';
       removeEventListeners(); // Remove event listeners after handling input
   }
@@ -88,12 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
           var ipAddress = data.ip;
-          //terminalTextContent[1] = "IP: " + ipAddress;
+          terminalTextContent[1] = "IP: " + ipAddress;
           typeWriter();
       })
       .catch(error => {
           console.error('Error fetching IP address:', error);
-          //terminalTextContent[1] = "IP: Unable to fetch IP address";
+          terminalTextContent[1] = "IP: Unable to fetch IP address";
           typeWriter();
       });
 
@@ -188,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Get the operating system information
   var operatingSystem = getOperatingSystem();
-  document.getElementById("user-description").innerHTML = 'Send me an <a href="mailto:cassius@mangopi.xyz" style="color:white;text-decoration:none;"><strong>email</strong></a> with this info:<br> <p style="font-size:7px">System: ' + operatingSystem + '<br>Url:' + window.location.href + '</p>';
+  terminalTextContent[2] = "System: " + operatingSystem;
 
   // Center the terminal window on the screen
   function centerTerminal() {
