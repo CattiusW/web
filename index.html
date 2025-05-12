@@ -30,8 +30,6 @@
 
     /* Make the blurred box bigger */
     #blurred-box {
-      width: 75%; /* Adjust width as per requirement */
-      height: 50%; /* Adjust height as per requirement */
       padding: 20px; /* Add padding if needed */
     }
 
@@ -61,14 +59,21 @@
   <div id="background">
   </div>
   <div>
-    <div id="blurred-box">
+    <div id="blurred-box" style="width: 30%;height: 42%;">
       <img id="profile-picture" src="default.jpeg" alt="Profile Picture">
       <img id="avatar-frame" src="" alt="Avatar Frame">
       <p id="username" style="color: white; font-weight: bold; font-size: large;">CattiusW</p> <!-- Username -->
       <!-- User Description -->
       <div class="user-description">
         
-        <p id="user-description" style="color: white;">Hi there! I’m Cassius, and I try to learn a new thing each day. I am interested in AI, Node.JS, web technologies & full-stack applications. I have 2 cats; Mango & Perdy. You can reach me <a href="https://mailhide.io/e/PYSevtvr" style="color:white;text-decoration:none;"><strong>here.</strong></a></p>
+        <p id="user-description2" style="color: white;">Hi there! I’m Cassius, and I try to learn a new thing each day. I am interested in AI, Node.JS, web technologies & full-stack applications. I have 2 cats; Mango & Perdy. You can reach me <a href="https://mailhide.io/e/PYSevtvr" style="color:white;text-decoration:none;"><strong>here.</strong></a><br><a style="color:white;text-decoration:none;"  onclick="document.getElementById('blurred-box').style.width = '50%'; 
+         document.getElementById('blurred-box').style.height = '90%'; 
+         Array.from(document.getElementsByClassName('hidden')).forEach(el => el.style.display = 'block');"><strong>More...</strong></a></p>
+        <p class="hidden" style="color: white;display:none;">You can check out my GitHub profile <a href="https://github.com/cattiusw" style="color:white;text-decoration:none;"><strong>here.</strong></a><br>My Skills and stuff I am learning:</p>
+        <img class="hidden" src="https://camo.githubusercontent.com/32018c9dd000cdda0803dfa24f4896adb832c98a2bcd8a5eb851b7073ab9115f/68747470733a2f2f736b696c6c69636f6e732e6465762f69636f6e733f693d6769746875622c61692c6a732c6c696e75782c6e6f64656a732c6769742c626173682c636f646570656e2c6373732c68746d6c2c72617370626572727970692c646f636b65722c7562756e74752c6170706c652c7673636f6465" style="width: 90%; height: 20%;border-radius: 0%;display:none;"></img>
+        <p class="hidden" style="color: white;display:none;">My hobbies include:<br>Making things with microcontrollers or with my <strong>RasperryPi</strong>,Determining how things work and generally breaking them in the process and <strong>reading</strong></p>
+        <p class="hidden" style="color: white;display:none;">My current favourite books are:<br>Mr. Penumbra's 24-Hour Bookstore, Sourdough and The Library of The Unwritten.<br>My favourite Programming Language is JavaScript (not just client side!)<br><br>All of my projects work - provided you press this thing in with your left hand while winding that with your foot, oops let me just fix that quickly *resolders wire*- 60% of the time.<br><br>I am a proud member of <a src="https://hackclub.com/" style="color: white;text-decoration:none;"><strong>Hackclub</strong></a><br><br><br></p>
+
       </div>
       <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
       <script>eruda.init();</script>
@@ -80,6 +85,7 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
    <script>
+   
     (function() {
       let scene, camera, renderer, container, materials = [], particles;
       let HEIGHT, WIDTH, fieldOfView, aspectRatio, nearPlane, farPlane, cameraZ;
