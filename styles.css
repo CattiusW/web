@@ -158,8 +158,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 30%; /* Adjust width as needed */
-  height: 40%; /* Adjust height as needed */
+  width: 30%;
+  height: 40%; 
   background-color: rgba(255, 255, 255, 0); /* Transparent background */
   border-radius: 20px; /* Rounded corners */
   border: 2px solid rgba(255, 255, 255, 0); /* Dark border with transparency */
@@ -181,7 +181,7 @@ body {
   width: 100px; /* Adjust size as needed */
   height: 100px; /* Adjust size as needed */
   border-radius: 50%; /* Rounded corners */
-  margin-bottom: 20px; /* Adjust margin as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
 }
 
 /* Links styles */
@@ -221,21 +221,21 @@ body {
 
 /* User Description styles */
 .user-description {
-  margin-bottom: 20px; /* Adjust margin as needed */
-}
-
-.user-description p {
   margin: 0; /* Remove default margin */
-  padding: 10px; /* Add padding */
+  padding-left: 10px; /* Add padding */
+  padding-right: 10px; /* Add padding */
+  padding-top: 10px; /* Add padding */
+  padding-bottom: 5px; /* Add padding */
   background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
   border-radius: 5px; /* Rounded corners */
   transition: background-color 0.3s; /* Smooth transition for background color */
+  margin-bottom: 0px; /* Adjust margin as needed */
 }
 
+
+
 /* User description hover effect */
-.user-description:hover p {
-  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background on hover */
-}
+
 
 #avatar-frame {
   position: absolute; /* Overlay on top of the profile picture */
