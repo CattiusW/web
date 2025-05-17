@@ -1,13 +1,8 @@
 <script>
-  let file = "https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt"
-  let file = "https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words.txt"
-  
+  let file = "https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt"  
   fetch (file)
   .then(x => x.text())
   .then(y => document.getElementById("cat").innerHTML = y);
-  fetch (file2)
-  .then(x => x.text())
-  .then(y => document.getElementById("caet").innerHTML = y);
   while(true){
   location.reload(true)
   };
@@ -16,5 +11,5 @@
 <style>body{cursor:none;}</style>
 <body>
 <p id="cat">YOU HAVE MESSED UP</p>
-  <p id="caet">um like badly</p>
+
 </body>
